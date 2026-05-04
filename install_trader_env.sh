@@ -9,8 +9,18 @@ create_env() {
     echo "==> Creating virtual environment: trader"
     if [ ! -d "$ENV_DIR" ]; then
         "$PYTHON_BIN" -m venv "$ENV_DIR"
+    elif [ ! -f "$ENV_DIR/bin/activate" ] || [ ! -x "$ENV_DIR/bin/python" ]; then
+        echo "==> Existing trader folder is incomplete. Rebuilding it..."
+        "$PYTHON_BIN" -m venv --clear "$ENV_DIR"
     else
         echo "==> Environment already exists: trader"
+    fi
+
+    if [ ! -f "$ENV_DIR/bin/activate" ]; then
+        echo "❌ Failed to create trader/bin/activate."
+        echo "Install the Python venv package for your system, then run this script again."
+        echo "On Ubuntu/Debian, try: sudo apt install python3-venv"
+        exit 1
     fi
 }
 
